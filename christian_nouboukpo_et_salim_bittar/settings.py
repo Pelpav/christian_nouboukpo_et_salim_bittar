@@ -135,10 +135,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 
 JAZZMIN_SETTINGS = {
-    "site_title": "BamabiTech",  # Titre du site
-    "site_header": "BamabiTech Administration",  # En-tête de l'administration
-    "site_brand": "BamabiTech",  # Nom de la marque
-    "welcome_sign": "Bienvenue sur le tableau de bord de BamabiTech",  # Message de bienvenue
-    "copyright": "BamabiTech © 2023",  # Copyright    
+    "site_title": "BambiTech",  # Titre du site
+    "site_header": "BambiTech Administration",  # En-tête de l'administration
+    "site_brand": "BambiTech",  # Nom de la marque
+    "welcome_sign": "Bienvenue sur le tableau de bord de BambiTech",  # Message de bienvenue
+    "copyright": "BambiTech © 2023",  # Copyright    
     "logo": "logo.png",  # Chemin vers votre logo
 }

@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.contrib.admin.widgets import AdminFileWidget
 from django.utils.safestring import mark_safe
+
+from django.db import models
+
 from .models import Client, Location, Avis, Vehicule, Document, Photo, Location_Vehicule, Dommage, Maintenance
-from myauth.models import User
 
 class AdminImageWidget(AdminFileWidget):
     def render(self, name, value, attrs=None, renderer=None):

@@ -16,3 +16,8 @@ Un Dommage fait l'objet d'une maintenance qui se répercute sur un Véhicule (id
 Back: backend
 Front: frontend
 Myauth: authentification
+
+# Informations
+
+Username : Admin
+Password : 12345678

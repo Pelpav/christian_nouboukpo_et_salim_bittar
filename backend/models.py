@@ -1,5 +1,7 @@
 from django.db import models
 
+from myauth.models import User
+
 class Client(User):
     tel = models.CharField(max_length=20)
     adresse = models.TextField()

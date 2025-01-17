@@ -1,0 +1,52 @@
+{% comment %} {% extends "base.html" %} {% endcomment %}
+{% load static %}
+
+{% block title %}Inscription{% endblock title %}
+
+{% block extraStyle %}
+    <link href="{% static 'css/auth.css' %}" rel="stylesheet">
+{% endblock extraStyle %}
+
+{% block content %}
+<div class="body_auth">
+  <div class="wrapper">
+    <form action="{% url 'register' %}" method="POST">
+      {% csrf_token %}
+      <h2>Inscription</h2>
+      {% if form.errors %}
+        <p class="alert alert-danger">Il eut des erreurs, veuillez voir les indications pour les corriger.<p>
+      {% endif %}
+      {% comment %} <div class="input-field">
+        <input type="text" name="username" id="username" required>
+        <label for="username">Entrez votre nom utilisateur</label>
+      </div>
+      <div class="input-field">
+        <input type="password" name="password1" id="password1" required>
+        <label for="password1">Entrez votre mot de passe</label>
+      </div>
+      <div class="input-field">
+        <input type="password" name="password2" id="password2" required>
+        <label for="password2">Confirmez votre mot de passe</label>
+      </div> {% endcomment %}
+      <!--Le code en commentaire est equivalent à cette boucle for-->
+      {% for field in form %}
+      <div class="input-field">
+        {{field}}
+        <label class="form-label" for="{{field.id_for_label}}">{{field.label}}</label>
+        <small class='help-text alert-danger'>{{ field.errors }}</small>
+      </div>
+      {% endfor %}
+      <div class="forget">
+        <label for="remember">
+          <input type="checkbox" id="remember">
+          <p>Se souvenir de moi</p>
+        </label>
+      </div>
+      <button type="submit">S'inscrire</button>
+      <div class="register">
+        <p>Vous avez un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

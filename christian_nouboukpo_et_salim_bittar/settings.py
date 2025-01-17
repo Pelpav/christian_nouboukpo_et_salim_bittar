@@ -131,3 +131,14 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings.py
+
+JAZZMIN_SETTINGS = {
+    "site_title": "BamabiTech",  # Titre du site
+    "site_header": "BamabiTech Administration",  # En-tête de l'administration
+    "site_brand": "BamabiTech",  # Nom de la marque
+    "welcome_sign": "Bienvenue sur le tableau de bord de BamabiTech",  # Message de bienvenue
+    "copyright": "BamabiTech © 2023",  # Copyright    
+    "logo": "logo.png",  # Chemin vers votre logo
+}

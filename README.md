@@ -1,3 +1,5 @@
+# Models
+
 User (id: int, firstname: string, lastname: string, email: string, username: string, password: string)
 Client hérite de User (id: int, tel: string, adresse: string, numPieceID: string[Unique], typePieceID: string, photo: image)
 Le client effectue une Location (id: int, dateLocation: dateTime, datePaiement: dateTime, dateSortie: dateTime, dateRetour: dateTime, statut: string, adresseLivraison: string[Parking par défaut]): Méthode (total():int)
@@ -8,3 +10,9 @@ Un Véhicule peut avoir une Photo ou non (id: int, indication: string, src: imag
 Location_Vehicule (id: int, etatSortie: string, etatRetour: string)
 Location_Vehicule peut avoir Dommage (id: int, description: string, photo: image)
 Un Dommage fait l'objet d'une maintenance qui se répercute sur un Véhicule (id: int, causes: text, traitement: text, montant: int, dateEntree: dateTime, dateSortie: dateTime, preuves: file)
+
+# Structure du projet
+
+Back: backend
+Front: frontend
+Myauth: authentification

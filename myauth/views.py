@@ -40,6 +40,7 @@ def register(request):
     return render(request, 'myauth/register.html', {'form': form})
 
 
+
 def forgot_password(request):
     context = {}
     if request.method == "POST":

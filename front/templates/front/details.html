@@ -1,0 +1,183 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<section
+  class="hero-wrap hero-wrap-2 js-fullheight"
+  style="background-image: url('{% static 'images/bg_3.jpg' %}')"
+  data-stellar-background-ratio="0.5"
+>
+  <div class="overlay"></div>
+  <div class="container">
+    <div
+      class="row no-gutters slider-text js-fullheight align-items-end justify-content-start"
+    >
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs">
+          <span class="mr-2"
+            ><a href="{% url 'home' %}"
+              >Accueil <i class="ion-ios-arrow-forward"></i></a
+          ></span>
+          <span>Détails du véhicule <i class="ion-ios-arrow-forward"></i></span>
+        </p>
+        <h1 class="mb-3 bread">Détails du véhicule</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ftco-section ftco-car-details">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <div class="car-details">
+          <div
+            class="img rounded"
+            style="background-image: url('{% if vehicule.photo_set.first %}{{ vehicule.photo_set.first.url }}{% else %}{% static 'images/default_car.jpg' %}{% endif %}');"
+          ></div>
+          <div class="text text-center">
+            <span class="subheading">{{ vehicule.marque }}</span>
+            <h2>{{ vehicule.marque }} {{ vehicule.modele }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services">
+          <div class="media-body py-md-4">
+            <div class="d-flex mb-3 align-items-center">
+              <div
+                class="icon d-flex align-items-center justify-content-center"
+              >
+                <span class="flaticon-dashboard"></span>
+              </div>
+              <div class="text">
+                <h3 class="heading mb-0 pl-3">
+                  Prix<span>{{ vehicule.prix }} FCFA</span>
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services">
+          <div class="media-body py-md-4">
+            <div class="d-flex mb-3 align-items-center">
+              <div
+                class="icon d-flex align-items-center justify-content-center"
+              >
+                <span class="flaticon-pistons"></span>
+              </div>
+              <div class="text">
+                <h3 class="heading mb-0 pl-3">
+                  Boîte de vitesse<span>{{ vehicule.boitevitesse }}</span>
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services">
+          <div class="media-body py-md-4">
+            <div class="d-flex mb-3 align-items-center">
+              <div
+                class="icon d-flex align-items-center justify-content-center"
+              >
+                <span class="flaticon-car-seat"></span>
+              </div>
+              <div class="text">
+                <h3 class="heading mb-0 pl-3">
+                  Nombre de places<span>{{ vehicule.nbrPlaces }}</span>
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services">
+          <div class="media-body py-md-4">
+            <div class="d-flex mb-3 align-items-center">
+              <div
+                class="icon d-flex align-items-center justify-content-center"
+              >
+                <span class="flaticon-backpack"></span>
+              </div>
+              <div class="text">
+                <h3 class="heading mb-0 pl-3">
+                  Nombre de portes<span>{{ vehicule.nbrPortes }}</span>
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services">
+          <div class="media-body py-md-4">
+            <div class="d-flex mb-3 align-items-center">
+              <div
+                class="icon d-flex align-items-center justify-content-center"
+              >
+                <span class="flaticon-diesel"></span>
+              </div>
+              <div class="text">
+                <h3 class="heading mb-0 pl-3">
+                  Type de carburant<span>{{ vehicule.carburant }}</span>
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services">
+          <div class="media-body py-md-4">
+            <div class="d-flex mb-3 align-items-center">
+              <div
+                class="icon d-flex align-items-center justify-content-center"
+              >
+                <span class="flaticon-air-conditioner"></span>
+              </div>
+              <div class="text">
+                <h3 class="heading mb-0 pl-3">
+                  Climatisation<span
+                    >{{ vehicule.climatisation|yesno:"Oui,Non" }}</span
+                  >
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md d-flex align-self-stretch ftco-animate">
+        <div class="media block-6 services">
+          <div class="media-body py-md-4">
+            <div class="d-flex mb-3 align-items-center">
+              <div
+                class="icon d-flex align-items-center justify-content-center"
+              >
+                <span class="flaticon-paint"></span>
+              </div>
+              <div class="text">
+                <h3 class="heading mb-0 pl-3">
+                  Couleur<span>{{ vehicule.couleur }}</span>
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="vehicule-photos">
+      {% for photo in vehicule.photo_set.all %} {% if photo.url %}
+      <img
+        src="{{ photo.url }}"
+        alt="{{ photo.indication }}"
+        class="img-fluid rounded"
+      />
+      {% endif %} {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock content %}

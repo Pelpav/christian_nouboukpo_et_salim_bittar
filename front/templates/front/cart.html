@@ -1,0 +1,106 @@
+{% extends 'base.html' %} {% load static %}{% block title %}Panier{% endblock %}
+{% block content %}
+<section
+  class="hero-wrap hero-wrap-2 js-fullheight"
+  style="background-image: url('{% static 'images/bg_3.jpg' %}')"
+  data-stellar-background-ratio="0.5"
+>
+  <div class="overlay"></div>
+  <div class="container">
+    <div
+      class="row no-gutters slider-text js-fullheight align-items-end justify-content-start"
+    >
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs">
+          <span class="mr-2"
+            ><a href="{% url 'home' %}"
+              >Accueil <i class="ion-ios-arrow-forward"></i></a
+          ></span>
+          <span>Panier <i class="ion-ios-arrow-forward"></i></span>
+        </p>
+        <h1 class="mb-3 bread">Votre Panier</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ftco-section">
+  <div class="container">
+    <div id="cart-content">
+      <!-- Le contenu du panier sera chargé ici par JavaScript -->
+    </div>
+    <div class="row justify-content-between">
+      <div class="col-md-6 text-left">
+        <a href="{% url 'cars' %}" class="btn btn-outline-primary btn-lg"
+          >Continuer vos achats</a
+        >
+      </div>
+      <div class="col-md-6 text-right">
+        <a href="{% url 'checkout' %}" class="btn btn-success btn-lg"
+          >Procéder au paiement</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let cartContent = document.getElementById("cart-content");
+
+    if (cart.length > 0) {
+      fetch(`/get_vehicle_details?ids[]=${cart.join("&ids[]=")}`)
+        .then((response) => response.json())
+        .then((data) => {
+          let total = 0;
+          let cartItemsHtml = `
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Nom</th>
+                  <th>Prix unitaire</th>
+                  <th>Quantité</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+
+          data.vehicles.forEach(function (vehicle) {
+            total += vehicle.price;
+
+            cartItemsHtml += `
+              <tr>
+                <td><img src="{% if vehicle.photo_set.first %}{{ vehicle.photo_set.first.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="${vehicle.name}" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                <td>${vehicle.name}</td>
+                <td>${vehicle.price} FCFA</td>
+                <td>1</td>
+                <td><button onclick="removeFromCart(${vehicle.id})" class="btn btn-danger">Supprimer</button></td>
+              </tr>
+            `;
+          });
+
+          cartItemsHtml += `
+              </tbody>
+            </table>
+            <div class="cart-total">
+              <h3>Total: ${total} FCFA</h3>
+            </div>
+          `;
+          cartContent.innerHTML = cartItemsHtml;
+        });
+    } else {
+      cartContent.innerHTML = "<p>Votre panier est vide</p>";
+    }
+  });
+
+  function removeFromCart(vehicleId) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart = cart.filter((id) => id !== vehicleId);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    location.reload();
+  }
+</script>
+{% endblock %}

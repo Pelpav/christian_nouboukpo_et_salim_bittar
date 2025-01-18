@@ -38,64 +38,7 @@
     <div class="row no-gutters">
       <div class="col-md-12 featured-top">
         <div class="row no-gutters">
-          <div class="col-md-4 d-flex align-items-center">
-            <form action="#" class="request-form ftco-animate bg-primary">
-              <h2>Faites votre voyage</h2>
-              <div class="form-group">
-                <label for="" class="label">Lieu de prise en charge</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Ville, Aéroport, Gare, etc"
-                />
-              </div>
-              <div class="form-group">
-                <label for="" class="label">Lieu de dépôt</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Ville, Aéroport, Gare, etc"
-                />
-              </div>
-              <div class="d-flex">
-                <div class="form-group mr-2">
-                  <label for="" class="label">Date de prise en charge</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="book_pick_date"
-                    placeholder="Date"
-                  />
-                </div>
-                <div class="form-group ml-2">
-                  <label for="" class="label">Date de dépôt</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="book_off_date"
-                    placeholder="Date"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="" class="label">Heure de prise en charge</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="time_pick"
-                  placeholder="Heure"
-                />
-              </div>
-              <div class="form-group">
-                <input
-                  type="submit"
-                  value="Louer une voiture maintenant"
-                  class="btn btn-secondary py-3 px-4"
-                />
-              </div>
-            </form>
-          </div>
-          <div class="col-md-8 d-flex align-items-center">
+          <div class="col-md-12 d-flex align-items-center">
             <div class="services-wrap rounded-right w-100">
               <h3 class="heading-section mb-4">
                 Meilleure façon de louer vos voitures parfaites
@@ -144,11 +87,6 @@
                   </div>
                 </div>
               </div>
-              <p>
-                <a href="#" class="btn btn-primary py-3 px-4"
-                  >Réservez votre voiture parfaite</a
-                >
-              </p>
             </div>
           </div>
         </div>
@@ -156,4 +94,71 @@
     </div>
   </div>
 </section>
+
+<!-- Section Échantillons de Véhicules -->
+<section class="ftco-section">
+  <div class="container">
+    <div class="row justify-content-center mb-5 pb-3">
+      <div class="col-md-7 heading-section text-center ftco-animate">
+        <h2 class="mb-4">Échantillons de Véhicules</h2>
+        <p>Explorez notre sélection de véhicules disponibles.</p>
+      </div>
+    </div>
+    <div class="row">
+      {% for vehicule in vehicules|slice:":3" %}
+      <div class="col-md-4">
+        <div class="car-wrap rounded ftco-animate">
+          <div
+            class="img rounded d-flex align-items-end"
+            style="background-image: url('{% if vehicule.photo_set.first %}{{ vehicule.photo_set.first.url }}{% else %}''{% endif %}')"
+          ></div>
+          <div class="text">
+            <h2 class="mb-0">
+              <a href="{% url 'vehicle_details' vehicule.id %}"
+                >{{ vehicule.marque }} {{ vehicule.modele }}</a
+              >
+            </h2>
+            <div class="d-flex mb-3">
+              <span class="cat">{{ vehicule.marque }}</span>
+              <p class="price ml-auto">
+                {{ vehicule.prix }} FCFA <span>/jour</span>
+              </p>
+            </div>
+            <p class="d-flex mb-0 d-block">
+              <a
+                href="{% url 'vehicle_details' vehicule.id %}"
+                class="btn btn-secondary py-2 ml-1"
+                >Détails</a
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Section Avis des Clients -->
+<section class="ftco-section bg-light">
+  <div class="container">
+    <div class="row justify-content-center mb-5 pb-3">
+      <div class="col-md-7 heading-section text-center ftco-animate">
+        <h2 class="mb-4">Avis des Clients</h2>
+        <p>Découvrez ce que nos clients disent de nous.</p>
+      </div>
+    </div>
+    <div class="row">
+      {% for avis in avis_clients %}
+      <div class="col-md-4">
+        <div class="avis-item">
+          <h3>{{ avis.client_nom }}</h3>
+          <p>{{ avis.commentaire }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 {% endblock content %}

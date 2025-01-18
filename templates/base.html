@@ -53,34 +53,74 @@
         >
           <span class="oi oi-menu"></span> Menu
         </button>
-
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+            >
               <a href="{% url 'home' %}" class="nav-link">Accueil</a>
             </li>
-            <li class="nav-item">
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
+            >
               <a href="{% url 'about' %}" class="nav-link">À propos</a>
             </li>
-            {% comment %}
-            <li class="nav-item">
-              <a href="{% url 'services' %}" class="nav-link">Services</a>
-            </li>
-            {% endcomment %} {% comment %}
-            <li class="nav-item">
-              <a href="{% url 'pricing' %}" class="nav-link">Tarifs</a>
-            </li>
-            {% endcomment %}
-            <li class="nav-item">
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'cars' %}active{% endif %}"
+            >
               <a href="{% url 'cars' %}" class="nav-link">Voitures</a>
             </li>
-            {% comment %}
-            <li class="nav-item">
-              <a href="{% url 'blog' %}" class="nav-link">Blog</a>
-            </li>
-            {% endcomment %}
-            <li class="nav-item">
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
+            >
               <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+            </li>
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'cart' %}active{% endif %}"
+            >
+              <a href="{% url 'cart' %}" class="nav-link">
+                <span class="oi oi-cart"></span> <!-- Icône du panier -->
+                (<span id="cart-count">0</span>) <!-- Compteur d'éléments dans le panier -->
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="userDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <span class="oi oi-person"></span>
+                {% if user.is_authenticated %} {{ user.username }} {% else %}
+                Compte {% endif %}
+              </a>
+              <div
+                class="dropdown-menu dropdown-menu-right animate slideIn"
+                aria-labelledby="userDropdown"
+              >
+                {% if user.is_authenticated %}
+                <form
+                  action="{% url 'logout' %}"
+                  method="post"
+                  style="display: inline"
+                >
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item">
+                    Se déconnecter
+                  </button>
+                </form>
+                {% else %}
+                <a class="dropdown-item" href="{% url 'login' %}"
+                  >Se connecter</a
+                >
+                <a class="dropdown-item" href="{% url 'register' %}"
+                  >S'inscrire</a
+                >
+                {% endif %}
+              </div>
             </li>
           </ul>
         </div>
@@ -247,6 +287,67 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
     <script src="{% static 'js/google-map.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script>
+      // Fonction pour ajouter un véhicule au panier
+      function ajouterAuPanier(vehicleId) {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (!cart.includes(vehicleId)) {
+          cart.push(vehicleId);
+          localStorage.setItem("cart", JSON.stringify(cart));
+                    mettreAJourCompteurPanier();
+          showToast("Véhicule ajouté au panier!");
+        } else {
+          showToast("Véhicule déjà dans le panier!");
+        }
+      }
+
+      // Fonction pour afficher les véhicules dans le panier
+      function afficherPanier() {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        // Logique pour afficher les véhicules dans le panier
+        console.log("Véhicules dans le panier:", cart);
+      }
+
+      // Appel de la fonction pour afficher le panier au chargement de la page
+      document.addEventListener("DOMContentLoaded", afficherPanier);
+
+       function mettreAJourCompteurPanier() {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        document.getElementById("cart-count").textContent = cart.length; // Met à jour le compteur
+      }
+
+      // Appel de la fonction pour afficher le panier au chargement de la page
+      document.addEventListener("DOMContentLoaded", function() {
+        afficherPanier();
+        mettreAJourCompteurPanier(); // Met à jour le compteur au chargement
+      });
+
+      function showToast(message) {
+     const toastHTML = `
+      <div class="toast" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 20px; border-radius: 5px; font-size: 1.5em;" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-body">
+          ${message}
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', toastHTML);
+    const toastElement = document.querySelector('.toast');
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
+    setTimeout(() => {
+      toastElement.remove();
+    }, 3000); // Supprime le toast après 3 secondes
+
+  }
+
+    function removeFromCart(vehicleId) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart = cart.filter((id) => id !== vehicleId);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    showToast("Véhicule supprimé du panier!"); // Remplace l'alerte par un toast
+    location.reload();
+  }
+    </script>
     {% endblock extraScript %}
   </body>
 </html>

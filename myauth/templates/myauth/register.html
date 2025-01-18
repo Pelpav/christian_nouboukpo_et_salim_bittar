@@ -1,52 +1,62 @@
-{% comment %} {% extends "base.html" %} {% endcomment %}
+{% extends "base.html" %}
 {% load static %}
-
 {% block title %}Inscription{% endblock title %}
 
-{% block extraStyle %}
-    <link href="{% static 'css/auth.css' %}" rel="stylesheet">
-{% endblock extraStyle %}
-
 {% block content %}
-<div class="body_auth">
-  <div class="wrapper">
-    <form action="{% url 'register' %}" method="POST">
-      {% csrf_token %}
-      <h2>Inscription</h2>
-      {% if form.errors %}
-        <p class="alert alert-danger">Il eut des erreurs, veuillez voir les indications pour les corriger.<p>
-      {% endif %}
-      {% comment %} <div class="input-field">
-        <input type="text" name="username" id="username" required>
-        <label for="username">Entrez votre nom utilisateur</label>
+<section
+  class="hero-wrap hero-wrap-2 js-fullheight"
+  style="background-image: url('{% static 'images/bg_3.jpg' %}')"
+  data-stellar-background-ratio="0.5"
+>
+  <div class="overlay"></div>
+  <div class="container">
+    <div
+      class="row no-gutters slider-text js-fullheight align-items-end justify-content-start"
+    >
+      <div class="col-md-9 ftco-animate pb-5">
+        <h1 class="mb-3 bread">Inscription</h1>
       </div>
-      <div class="input-field">
-        <input type="password" name="password1" id="password1" required>
-        <label for="password1">Entrez votre mot de passe</label>
-      </div>
-      <div class="input-field">
-        <input type="password" name="password2" id="password2" required>
-        <label for="password2">Confirmez votre mot de passe</label>
-      </div> {% endcomment %}
-      <!--Le code en commentaire est equivalent à cette boucle for-->
-      {% for field in form %}
-      <div class="input-field">
-        {{field}}
-        <label class="form-label" for="{{field.id_for_label}}">{{field.label}}</label>
-        <small class='help-text alert-danger'>{{ field.errors }}</small>
-      </div>
-      {% endfor %}
-      <div class="forget">
-        <label for="remember">
-          <input type="checkbox" id="remember">
-          <p>Se souvenir de moi</p>
-        </label>
-      </div>
-      <button type="submit">S'inscrire</button>
-      <div class="register">
-        <p>Vous avez un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
-      </div>
-    </form>
+    </div>
   </div>
-</div>
+</section>
+
+<section class="ftco-section contact-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 block-9 mb-md-5">
+        <form action="{% url 'register' %}" method="POST" class="bg-light p-5 contact-form">
+          {% csrf_token %}
+          <h2 class="text-center">Inscription</h2>
+          {% if form.errors %}
+          <p class="alert alert-danger">
+            Il y a eu des erreurs, veuillez voir les indications pour les corriger.
+          </p>
+          {% endif %}
+          {% for field in form %}
+          <div class="form-group">
+            {{ field }}
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <small class='help-text alert-danger'>{{ field.errors }}</small>
+          </div>
+          {% endfor %}
+          <div class="form-group d-flex justify-content-between">
+            <label for="remember" class="d-flex align-items-center">
+              <input type="checkbox" id="remember" class="mr-2" />
+              <span>Se souvenir de moi</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary py-3 px-5">S'inscrire</button>
+          </div>
+          <div class="form-group text-center">
+            <p>
+              Vous avez un compte ?
+              <a href="{% url 'login' %}">Se connecter</a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock content %}

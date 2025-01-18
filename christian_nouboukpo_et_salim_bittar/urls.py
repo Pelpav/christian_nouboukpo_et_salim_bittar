@@ -17,13 +17,29 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from front import views as front_views
+from myauth import views as myauth_views
+from django.contrib.auth.views import LoginView, LogoutView
+
 urlpatterns = [
     path('manage/', admin.site.urls),
     path('', front_views.home, name='home'),
     path('about/', front_views.about, name='about'),
     path('contact/', front_views.contact, name='contact'),
+    path('cars/', front_views.cars, name='cars'),
     path('services/', front_views.services, name='services'),
     path('blog/', front_views.blog, name='blog'),
-    path('cars/', front_views.cars, name='cars'),
-    # path('blog-single/', front_views.blog_single, name='blog-single'),
+    path('details/<int:id>/', front_views.vehicle_details, name='vehicle_details'),
+    path('login', 
+         view=LoginView.as_view(template_name='myauth/login.html', next_page='home', redirect_authenticated_user=True),
+         name='login'),
+    path('logout', 
+         view=LogoutView.as_view(next_page='home'),
+         name='logout'),
+    path('register', myauth_views.register, name='register'),
+    path('forgot_password', myauth_views.forgot_password, name='forgot_password'),
+    path('updatepassword/<str:token>/<str:uid>', myauth_views.update_password, name='update_password'),
+    path('cart/', front_views.cart, name='cart'),
+    path('checkout', front_views.checkout, name='checkout'),
+    path('get_vehicle_details/', front_views.get_vehicle_details, name='vehicle_details'),
+    path('validation/', front_views.validation, name='validation'),
 ]

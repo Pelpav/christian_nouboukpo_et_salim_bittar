@@ -21,3 +21,28 @@ Myauth: authentification
 
 Username : Admin
 Password : 12345678
+
+
+# Bugs actuels de l'application :
+# 1. Erreur de récupération lors du checkout : Cela se produit lorsque les détails des véhicules ne peuvent pas être récupérés correctement, entraînant un échec de la validation du panier.
+# 
+# 2. Problème de redirection après validation : L'utilisateur n'est pas redirigé vers la page de confirmation après avoir validé l'achat.
+# 
+# 3. Gestion des erreurs : Les messages d'erreur ne sont pas toujours clairs pour l'utilisateur, ce qui complique le diagnostic des problèmes.
+# 
+# 4. Problème de session utilisateur : Dans certains cas, l'utilisateur peut être déconnecté de manière inattendue pendant le processus de paiement.
+# 
+# 5. Validation des données : Les données du formulaire de paiement ne sont pas toujours validées correctement, ce qui peut entraîner des erreurs lors de la soumission.
+# 
+# 6. Problèmes de performance : Le chargement des détails des véhicules peut être lent, affectant l'expérience utilisateur.
+# 
+# 7. Problème de compatibilité : L'application peut rencontrer des problèmes sur certains navigateurs ou appareils mobiles.
+# 
+# 8. Erreurs de sécurité : Des failles potentielles dans la gestion des sessions et des données sensibles.
+# 
+# 9. Problèmes d'affichage : Certains éléments de l'interface utilisateur peuvent ne pas s'afficher correctement sur toutes les résolutions d'écran.
+# 
+# 10. Bugs liés aux notifications : Les notifications de confirmation d'achat ne sont pas toujours envoyées à l'utilisateur.
+# 
+# Il est recommandé de corriger ces bugs pour améliorer l'expérience utilisateur et la fiabilité de l'application.
+# End of Selection

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.validators import validate_email
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -17,9 +18,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 import codecs
 
-# def login(request):
-#     return render(request, 'myauth/login.html', {})
-
 def register(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -27,15 +25,18 @@ def register(request):
     from django.contrib.auth.forms import UserCreationForm
     form = UserCreationForm(request.POST or None)
     if form.is_valid():
-        user = form.save()
-        from .models import Client
-        client = Client()  # Créer une instance de Client sans arguments
-        client.user = user  # Assigner l'utilisateur après
-        client.save()  # Sauvegarder l'instance
-        from django.contrib.auth import authenticate, login
-        login(request, 
-            authenticate(username=user.username, password=form.cleaned_data['password1']))
-        return redirect('home')
+        try:
+            user = form.save()
+            from .models import Client
+            client = Client()  # Créer une instance de Client sans arguments
+            client.user = user  # Assigner l'utilisateur après
+            client.save()  # Sauvegarder l'instance
+            login(request, 
+                authenticate(username=user.username, password=form.cleaned_data['password1']))
+            return redirect('home')
+        except IntegrityError:
+            form.add_error('username', "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.")
+            return redirect('login')  # Rediriger vers la page de connexion en cas d'erreur
     return render(request, 'myauth/register.html', {'form': form})
 
 

@@ -73,7 +73,6 @@ def validation(request):
     try:
         client = request.user.client
     except Client.DoesNotExist:
-        # Rediriger vers une page d'erreur ou afficher un message approprié
         return redirect('register')  # ou une autre page appropriée
 
     # Créer une nouvelle location
@@ -93,9 +92,10 @@ def validation(request):
 
     # Mettre à jour Location_Vehicule pour chaque véhicule
     for vehicle_id in vehicle_ids:
+        vehicule = get_object_or_404(Vehicule, id=vehicle_id)
         Location_Vehicule.objects.create(
             location=location,
-            vehicule=Vehicule.objects.get(id=vehicle_id),
+            vehicule=vehicule,
             etatSortie='Validé',
             etatRetour='En attente'
         )

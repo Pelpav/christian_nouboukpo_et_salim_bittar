@@ -304,8 +304,8 @@
       // Fonction pour afficher les véhicules dans le panier
       function afficherPanier() {
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        // Logique pour afficher les véhicules dans le panier
-        console.log("Véhicules dans le panier:", cart);
+        console.log("Contenu du panier:", cart.length); // Ajout de la journalisation pour afficher le contenu du panier
+        document.getElementById("cart-count").textContent = cart.length; // Met à jour le compteur avec le nombre de véhicules dans le panier
       }
 
       // Appel de la fonction pour afficher le panier au chargement de la page

@@ -58,7 +58,6 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Photo</th>
                   <th>Nom</th>
                   <th>Prix unitaire</th>
                   <th>Quantité</th>
@@ -73,7 +72,6 @@
 
             cartItemsHtml += `
               <tr>
-                <td><img src="{% if vehicle.photo_set.first %}{{ vehicle.photo_set.first.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="${vehicle.name}" style="width: 50px; height: 50px; object-fit: cover;"></td>
                 <td>${vehicle.name}</td>
                 <td>${vehicle.price} FCFA</td>
                 <td>1</td>

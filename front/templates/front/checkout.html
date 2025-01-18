@@ -68,7 +68,7 @@
     console.log("Contenu du panier:", cart);
     if (cart.length > 0) {
       console.log("Le panier contient des articles. Récupération des détails des véhicules...");
-      fetch(`/get_vehicle_details?ids[]=${cart.map(item => item.id).join("&ids[]=")}`)
+      fetch(`/get_vehicle_details?ids[]=${cart.join("&ids[]=")}`)
         .then(response => {
           if (!response.ok) {
             console.error("Erreur lors de la récupération des détails des véhicules: " + response.statusText);
@@ -122,6 +122,7 @@
         body: cartData
       }).then(response => {
         if (response.ok) {
+          localStorage.removeItem("cart"); // Vider le stockage local
           window.location.href = response.url; // Rediriger après la validation
         } else {
           console.error("Erreur lors de la validation:", response.statusText);

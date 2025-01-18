@@ -1,14 +1,16 @@
 import json
 from django.shortcuts import get_object_or_404, render, redirect
 from back.models import *
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-# Créer vos vues ici.
+def check_login(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+
 def home(request):
-    vehicules = Vehicule.objects.all()[:3]  # Exemple pour limiter à 3 échantillons
+    vehicules = Vehicule.objects.all()[:3]
     avis_clients = Avis.objects.all()
     return render(request, 'front/home.html', {
         'services': services,
@@ -36,13 +38,15 @@ def vehicle_details(request, id):
     vehicule = get_object_or_404(Vehicule, id=id)
     return render(request, 'front/details.html', {'vehicule': vehicule})
 
-# Nouvelles vues pour le panier et le paiement
 def cart(request):
     return render(request, 'front/cart.html')
 
-@login_required
 @csrf_exempt
 def checkout(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    check_login(request)
     if request.method == 'POST':
         cart = json.loads(request.body) if request.body else []
         vehicle_ids = [item['id'] for item in cart]
@@ -62,35 +66,32 @@ def get_vehicle_details(request):
     ]
     return JsonResponse({'vehicles': vehicle_data}) 
 
-@login_required
 @csrf_exempt
 def validation(request):
-    vehicle_ids = json.loads(request.POST.get('vehicle_ids', '[]'))
+    cart = json.loads(request.body) if request.body else []  # Changer pour utiliser request.body
+    vehicle_ids = [vehicle_id for vehicle_id in cart]  # Récupérer les IDs des véhicules à partir du panier
+
     if not vehicle_ids:
         return redirect('checkout')
 
-    # Vérifier si l'utilisateur a un profil Client
+    client = get_object_or_404(Client, id=request.user.id)  # Récupérer le client à partir du modèle Client
+
     try:
-        client = request.user.client
-    except Client.DoesNotExist:
-        return redirect('register')  # ou une autre page appropriée
+        location = Location.objects.create(
+            client=client,
+            dateLocation=timezone.now(),
+            dateSortie=timezone.now(), 
+            datePaiement=timezone.now(),
+            dateRetour=timezone.now() + timezone.timedelta(days=1),
+            statut='En attente',
+            adresseLivraison='Parking'
+        )
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
-    # Créer une nouvelle location
-    location = Location.objects.create(
-        client=client,
-        dateLocation=timezone.now(),
-        dateSortie=timezone.now(),
-        dateRetour=timezone.now() + timezone.timedelta(days=1),
-        statut='En attente',
-        adresseLivraison='Parking'
-    )
-
-    # Mettre à jour la base de données pour confirmer la location
     location.statut = 'Validé'
-    location.datePaiement = timezone.now()
     location.save()
 
-    # Mettre à jour Location_Vehicule pour chaque véhicule
     for vehicle_id in vehicle_ids:
         vehicule = get_object_or_404(Vehicule, id=vehicle_id)
         Location_Vehicule.objects.create(
@@ -100,5 +101,28 @@ def validation(request):
             etatRetour='En attente'
         )
 
-    # Rediriger vers une page de confirmation
-    return redirect('home')
+    # Vider le panier après validation
+    # Remplacer l'appel à localStorage par une redirection vers le front-end pour vider le panier
+    response = redirect('home')
+    response.delete_cookie('cart')  # Supprimer le cookie du panier
+    return response
+
+def my_locations(request):
+    locations = Location.objects.filter(client=request.user)
+    return render(request, 'front/my_locations.html', {'locations': locations})
+
+def submit_review(request, location_id):
+    if request.method == 'POST':
+        location = get_object_or_404(Location, id=location_id)
+        commentaire = request.POST.get('commentaire')
+        note = request.POST.get('note')
+        
+        # Créer un nouvel avis
+        avis = Avis(location=location, commentaire=commentaire, note=note)
+        avis.save()
+        
+        return redirect('my_locations')  # Rediriger vers la page des locations après soumission
+    else:
+        return HttpResponse("Méthode non autorisée", status=405)
+    
+    

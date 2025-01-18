@@ -17,26 +17,44 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 import codecs
-
 def register(request):
     if request.user.is_authenticated:
         return redirect('home')
         
-    from django.contrib.auth.forms import UserCreationForm
-    form = UserCreationForm(request.POST or None)
+    from django import forms
+    from .models import Client
+
+    class ClientCreationForm(forms.ModelForm):
+        password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+        password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+
+        class Meta:
+            model = Client
+            fields = ('username', 'email', 'tel', 'adresse', 'numPieceID', 'typePieceID', 'photo')
+
+        def clean_password2(self):
+            password1 = self.cleaned_data.get("password1")
+            password2 = self.cleaned_data.get("password2")
+            if password1 and password2 and password1 != password2:
+                raise forms.ValidationError("Les mots de passe ne correspondent pas")
+            return password2
+
+        def save(self, commit=True):
+            user = super().save(commit=False)
+            user.set_password(self.cleaned_data["password1"])
+            if commit:
+                user.save()
+            return user
+
+    form = ClientCreationForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         try:
             user = form.save()
-            from .models import Client
-            client = Client()  # Créer une instance de Client sans arguments
-            client.user = user  # Assigner l'utilisateur après
-            client.save()  # Sauvegarder l'instance
-            login(request, 
-                authenticate(username=user.username, password=form.cleaned_data['password1']))
+            login(request, user)
             return redirect('home')
         except IntegrityError:
             form.add_error('username', "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.")
-            return redirect('login')  # Rediriger vers la page de connexion en cas d'erreur
+            return redirect('login')
     return render(request, 'myauth/register.html', {'form': form})
 
 
@@ -102,3 +120,4 @@ def update_password(request, token, uid):
             message = "Les deux mot de pass ne correspondent pas"
     context = {"errors": errors, "success": success, "message": message}
     return render(request, "myauth/update_password.html", context)
+

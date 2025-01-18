@@ -141,5 +141,5 @@ JAZZMIN_SETTINGS = {
     "site_brand": "BambiTech",  # Nom de la marque
     "welcome_sign": "Bienvenue sur le tableau de bord de BambiTech",  # Message de bienvenue
     "copyright": "BambiTech © 2023",  # Copyright    
-    "logo": "logo.png",  # Chemin vers votre logo
+    "logo": "logo.png",
 }

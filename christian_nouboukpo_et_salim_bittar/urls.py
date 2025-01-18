@@ -42,4 +42,6 @@ urlpatterns = [
     path('checkout', front_views.checkout, name='checkout'),
     path('get_vehicle_details/', front_views.get_vehicle_details, name='vehicle_details'),
     path('validation/', front_views.validation, name='validation'),
+    path('my_locations/', front_views.my_locations, name='my_locations'),
+    path('submit_review/<int:location_id>/', front_views.submit_review, name='submit_review'),
 ]

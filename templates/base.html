@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="fr">
   <head>
-    <title>{% block title %}Carbook{% endblock title %}</title>
+    <title>{% block title %} PavlovParking{% endblock title %}</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -30,8 +30,19 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}" />
     <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}" />
     <link rel="stylesheet" href="{% static 'css/flaticon.css' %}" />
+    <!-- Fixed hef to href -->
     <link rel="stylesheet" href="{% static 'css/icomoon.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+        <style>
+      /* Ajoutez ce style pour changer la couleur des boutons et icônes en rouge */
+      .icon, .oi {
+        color: #FF0000 !important; /* Change la couleur des icônes */
+      }
+      .btn{
+        color: white !important;
+        background-color: #FF0000
+      }
+    </style>
     {% endblock extraStyle %}
   </head>
   <body>
@@ -41,7 +52,7 @@
       id="ftco-navbar"
     >
       <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">Car<span>Book</span></a>
+        <a class="navbar-brand" href="{% url 'home' %}">Pavlov<span>Parking</span></a>
         <button
           class="navbar-toggler"
           type="button"
@@ -79,10 +90,21 @@
               class="nav-item {% if request.resolver_match.url_name == 'cart' %}active{% endif %}"
             >
               <a href="{% url 'cart' %}" class="nav-link">
-                <span class="oi oi-cart"></span> <!-- Icône du panier -->
-                (<span id="cart-count">0</span>) <!-- Compteur d'éléments dans le panier -->
+                <span class="oi oi-cart"></span>
+                <!-- Icône du panier -->
+                (<span id="cart-count">0</span>)
+                <!-- Compteur d'éléments dans le panier -->
               </a>
             </li>
+            {% if user.is_authenticated %}
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'my_locations' %}active{% endif %}"
+            >
+              <a href="{% url 'my_locations' %}" class="nav-link"
+                >Mes locations</a
+              >
+            </li>
+            {% endif %}
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
@@ -137,20 +159,26 @@
                 <a href="#" class="logo">Car<span>book</span></a>
               </h2>
               <p>
-                Far far away, behind the word mountains, far from the countries
-                Vokalia and Consonantia, there live the blind texts.
+                Bienvenue chez PavlovParking, votre partenaire de confiance pour
+                la location de voitures.
               </p>
               <ul
                 class="ftco-footer-social list-unstyled float-md-left float-lft mt-5"
               >
                 <li class="ftco-animate">
-                  <a href="#"><span class="icon-twitter"></span></a>
+                  <a href="https://twitter.com/votrecompte"
+                    ><span class="icon-twitter"></span
+                  ></a>
                 </li>
                 <li class="ftco-animate">
-                  <a href="#"><span class="icon-facebook"></span></a>
+                  <a href="https://facebook.com/votrecompte"
+                    ><span class="icon-facebook"></span
+                  ></a>
                 </li>
                 <li class="ftco-animate">
-                  <a href="#"><span class="icon-instagram"></span></a>
+                  <a href="https://instagram.com/votrecompte"
+                    ><span class="icon-instagram"></span
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -205,23 +233,23 @@
               <div class="block-23 mb-3">
                 <ul>
                   <li>
-                    <span class="icon icon-map-marker"></span
-                    ><span class="text"
+                    <span class="icon icon-map-marker"></span>
+                    <span class="text"
                       >203 Fake St. Mountain View, San Francisco, California,
                       USA</span
                     >
                   </li>
                   <li>
-                    <a href="#"
-                      ><span class="icon icon-phone"></span
-                      ><span class="text">+2 392 3929 210</span></a
-                    >
+                    <a href="#">
+                      <span class="icon icon-phone"></span>
+                      <span class="text">+2 392 3929 210</span>
+                    </a>
                   </li>
                   <li>
-                    <a href="#"
-                      ><span class="icon icon-envelope"></span
-                      ><span class="text">info@yourdomain.com</span></a
-                    >
+                    <a href="#">
+                      <span class="icon icon-envelope"></span>
+                      <span class="text">info@yourdomain.com</span>
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -294,7 +322,7 @@
         if (!cart.includes(vehicleId)) {
           cart.push(vehicleId);
           localStorage.setItem("cart", JSON.stringify(cart));
-                    mettreAJourCompteurPanier();
+          mettreAJourCompteurPanier();
           showToast("Véhicule ajouté au panier!");
         } else {
           showToast("Véhicule déjà dans le panier!");
@@ -311,42 +339,41 @@
       // Appel de la fonction pour afficher le panier au chargement de la page
       document.addEventListener("DOMContentLoaded", afficherPanier);
 
-       function mettreAJourCompteurPanier() {
+      function mettreAJourCompteurPanier() {
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
         document.getElementById("cart-count").textContent = cart.length; // Met à jour le compteur
       }
 
       // Appel de la fonction pour afficher le panier au chargement de la page
-      document.addEventListener("DOMContentLoaded", function() {
+      document.addEventListener("DOMContentLoaded", function () {
         afficherPanier();
         mettreAJourCompteurPanier(); // Met à jour le compteur au chargement
       });
 
       function showToast(message) {
-     const toastHTML = `
+        const toastHTML = `
       <div class="toast" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 20px; border-radius: 5px; font-size: 1.5em;" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-body">
           ${message}
         </div>
       </div>
     `;
-    document.body.insertAdjacentHTML('beforeend', toastHTML);
-    const toastElement = document.querySelector('.toast');
-    const toast = new bootstrap.Toast(toastElement);
-    toast.show();
-    setTimeout(() => {
-      toastElement.remove();
-    }, 3000); // Supprime le toast après 3 secondes
+        document.body.insertAdjacentHTML("beforeend", toastHTML);
+        const toastElement = document.querySelector(".toast");
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+        setTimeout(() => {
+          toastElement.remove();
+        }, 3000); // Supprime le toast après 3 secondes
+      }
 
-  }
-
-    function removeFromCart(vehicleId) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart = cart.filter((id) => id !== vehicleId);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    showToast("Véhicule supprimé du panier!"); // Remplace l'alerte par un toast
-    location.reload();
-  }
+      function removeFromCart(vehicleId) {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        cart = cart.filter((id) => id !== vehicleId);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        showToast("Véhicule supprimé du panier!"); // Remplace l'alerte par un toast
+        location.reload();
+      }
     </script>
     {% endblock extraScript %}
   </body>
